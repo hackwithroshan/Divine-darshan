@@ -15,7 +15,7 @@ async function build() {
     outfile: path.join(distDir, 'bundle.js'),
     minify: true,
     sourcemap: true,
-    target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
+    target: ['es2020'], // Changed to a more modern target
     define: { 'process.env.NODE_ENV': '"production"' }
   });
 
