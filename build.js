@@ -37,7 +37,7 @@ async function build() {
   fs.writeFileSync(destHtmlPath, html);
 
   // Copy other static assets if any
-  // fs.copySync('public', distDir);
+  fs.copySync('public', distDir);
 
   console.log('Frontend build successful. Output in /dist directory.');
 }
