@@ -1,4 +1,3 @@
-
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -8,13 +7,16 @@ const errorHandler = require('./middleware/error');
 // Load env vars
 dotenv.config();
 
-// --- START OF FIX: Add startup check for JWT_SECRET ---
-if (!process.env.JWT_SECRET) {
-    console.error('\n\n--- FATAL ERROR: JWT_SECRET is not defined in the environment variables. ---');
-    console.error('The backend server cannot start without a secret key for signing tokens.');
-    console.error('1. Open the ".env" file in the "/backend" directory.');
-    console.error('2. Add a line for JWT_SECRET with a long, random, secret string.');
-    console.error('Example: JWT_SECRET=your_super_secret_and_random_string_here\n\n');
+// --- START OF FIX: Add comprehensive startup check for all required environment variables ---
+const requiredEnvVars = ['JWT_SECRET', 'RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'MONGO_URI', 'FRONTEND_URL'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+    console.error('\n\n--- FATAL ERROR: Missing Required Environment Variables ---');
+    console.error('The backend server cannot start because the following variables are not defined:');
+    missingVars.forEach(varName => console.error(`  - ${varName}`));
+    console.error('\nPlease check your ".env" file (for local development) or your Vercel Project Settings (for deployment).');
+    console.error('See backend/README.md for more details on setting up environment variables.\n\n');
     process.exit(1);
 }
 // --- END OF FIX ---
@@ -31,6 +33,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const queueAssistanceRoutes = require('./routes/queueAssistanceRoutes');
 
 
 const app = express();
@@ -50,6 +53,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/queue-assistance', queueAssistanceRoutes);
 
 
 // Error Handler Middleware (must be after mounting routes)

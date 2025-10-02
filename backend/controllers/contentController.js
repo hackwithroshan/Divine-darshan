@@ -78,3 +78,28 @@ exports.updateSeasonalEvent = asyncHandler(async (req, res, next) => {
     );
     res.status(200).json({ success: true, data: event.data });
 });
+
+// --- APP SETTINGS ---
+
+// @desc      Get app settings
+// @route     GET /api/content/settings
+// @access    Public
+exports.getAppSettings = asyncHandler(async (req, res, next) => {
+    const settings = await Content.findOne({ key: 'appSettings' });
+    if (!settings) {
+        return next(new ErrorResponse(`App settings not configured`, 404));
+    }
+    res.status(200).json({ success: true, data: settings.data });
+});
+
+// @desc      Update app settings
+// @route     PUT /api/content/settings
+// @access    Private/Admin
+exports.updateAppSettings = asyncHandler(async (req, res, next) => {
+    const settings = await Content.findOneAndUpdate(
+        { key: 'appSettings' },
+        { data: req.body },
+        { new: true, upsert: true, runValidators: true }
+    );
+    res.status(200).json({ success: true, data: settings.data });
+});

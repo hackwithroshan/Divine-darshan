@@ -80,9 +80,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLoginSuccess }) => {
         const result = await login(loginIdentifier, password);
         setIsSubmitting(false);
 
-        // FIX: Reverting the conditional to a standard success check to correctly narrow the discriminated union type.
-        // This ensures safe access to `user` on success and `error` on failure.
-        if (result.success) {
+        // FIX: The `if (result.success)` check was failing type narrowing. Using the `in` operator is a more robust type guard.
+        if ('user' in result) {
             onLoginSuccess(result.user);
         } else {
             toastContext?.addToast(result.error || t('loginModal.invalidCredentials'), 'error');
@@ -97,9 +96,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLoginSuccess }) => {
         const result = await signup(name, mobile, email, password);
         setIsSubmitting(false);
 
-        // FIX: Reverting the conditional to a standard success check to correctly narrow the discriminated union type.
-        // This ensures safe access to `user` on success and `error` on failure.
-        if (result.success) {
+        // FIX: The `if (result.success)` check was failing type narrowing. Using the `in` operator is a more robust type guard.
+        if ('user' in result) {
             onLoginSuccess(result.user);
         } else {
             toastContext?.addToast(result.error || t('loginModal.error.generic'), 'error');

@@ -1,5 +1,3 @@
-
-
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -13,9 +11,11 @@ const User = require('../models/User');
 const Testimonial = require('../models/Testimonial');
 const Service = require('../models/Service');
 const Content = require('../models/Content');
+const QueueAssistancePackage = require('../models/QueueAssistancePackage');
+const QueueAssistanceAddOn = require('../models/QueueAssistanceAddOn');
 
 // Load data
-const { temples, users, testimonials, services, seasonalEvent } = require('./data');
+const { temples, users, testimonials, services, seasonalEvent, appSettings, queueAssistancePackages, queueAssistanceAddOns } = require('./data');
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI, {
@@ -31,12 +31,16 @@ const importData = async () => {
     await Testimonial.deleteMany();
     await Service.deleteMany();
     await Content.deleteMany();
+    await QueueAssistancePackage.deleteMany();
+    await QueueAssistanceAddOn.deleteMany();
 
     await Temple.create(temples);
     await User.create(users);
     await Testimonial.create(testimonials);
     await Service.create(services);
-    await Content.create(seasonalEvent);
+    await Content.create([seasonalEvent, appSettings]);
+    await QueueAssistancePackage.create(queueAssistancePackages);
+    await QueueAssistanceAddOn.create(queueAssistanceAddOns);
 
 
     console.log('Data Imported...');
@@ -55,6 +59,8 @@ const deleteData = async () => {
     await Testimonial.deleteMany();
     await Service.deleteMany();
     await Content.deleteMany();
+    await QueueAssistancePackage.deleteMany();
+    await QueueAssistanceAddOn.deleteMany();
     console.log('Data Destroyed...');
     process.exit();
   } catch (err) {

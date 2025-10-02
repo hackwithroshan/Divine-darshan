@@ -1,8 +1,8 @@
-# Divine Darshan - A Modern Devotional Services Platform
+# astrologica - A Modern Devotional Services Platform
 
-Divine Darshan is a modern, devotional, and user-friendly full-stack application for booking religious services online. It is designed for ease of use, especially for elderly devotees, with a focus on a quick and simple booking process for pujas, prasad subscriptions, and other temple services.
+astrologica is a modern, devotional, and user-friendly full-stack application for booking religious services online. It is designed for ease of use, especially for elderly devotees, with a focus on a quick and simple booking process for pujas, prasad subscriptions, and other temple services.
 
-![Divine Darshan Screenshot](https://storage.googleapis.com/aistudio-project-images/22904323-289c-40d1-b51f-61219b5b248a/4a1c1d0b-68d8-4a0b-93f0-4fc750e64c1c.png)
+![astrologica Screenshot](https://storage.googleapis.com/aistudio-project-images/22904323-289c-40d1-b51f-61219b5b248a/4a1c1d0b-68d8-4a0b-93f0-4fc750e64c1c.png)
 
 ---
 
@@ -54,86 +54,82 @@ The two parts are designed to be developed and deployed together but run as sepa
 
 ## 4. Local Development Setup
 
+To run this project on your computer, you need two separate terminals.
+
 ### Prerequisites
 
 -   **Node.js:** v16 or later.
--   **MongoDB:** A running instance, either locally or on a cloud service like MongoDB Atlas.
+-   **MongoDB:** A running instance (either locally or on a cloud service like MongoDB Atlas).
 
-### Step 1: Clone the Repository
+### Step 1: Install All Dependencies
 
-```bash
-git clone <your-repository-url>
-cd <your-repository-name>
-```
-
-### Step 2: Install Dependencies
-
-This is a monorepo, so you need to install dependencies for both the frontend and backend.
+First, install the necessary packages for both the frontend and the backend.
 
 ```bash
-# Install frontend dependencies from the root directory
+# 1. Install frontend packages from the root directory
 npm install
 
-# Install backend dependencies
+# 2. Install backend packages
 cd backend
 npm install
 cd ..
 ```
 
-### Step 3: Configure Backend Environment
+### Step 2: Configure the Backend
 
-1.  Navigate to the `/backend` directory.
+The backend needs secret keys to run.
+
+1.  Go into the `/backend` directory.
 2.  Create a new file named `.env`.
-3.  Copy the contents below into the `.env` file and replace the placeholder values.
+3.  Copy and paste the content below into your `.env` file, and fill in your actual values. **All variables are required.**
 
     ```env
-    # The port your server will run on
+    # The port your backend server will run on (should be 5000)
     PORT=5000
 
     # Your MongoDB connection string.
-    # Replace with your actual string from your local instance or MongoDB Atlas.
-    # Example for local DB: MONGO_URI=mongodb://127.0.0.1:27017/divine_darshan
+    # Replace with your string from your local instance or MongoDB Atlas.
     MONGO_URI=mongodb://your_connection_string_here
 
-    # A long, random, and secret string for signing security tokens. This is critical.
-    # Use an online generator to create a strong secret key.
+    # A long, random, and secret string for security.
+    # Use an online password generator to create a strong key.
     JWT_SECRET=your_super_secret_and_random_string_for_jwt
     
-    # Your Razorpay API keys. Get these from your Razorpay Dashboard.
-    # NEVER commit these to a public repository.
+    # Your Razorpay API keys (you can use Test keys for local development)
     RAZORPAY_KEY_ID=your_razorpay_key_id
     RAZORPAY_KEY_SECRET=your_razorpay_key_secret
     ```
 
-### Step 4: Seed the Database
+### Step 3: Seed the Database (First Time Only)
 
-To populate your database with initial sample data (temples, users, services), run the seeder script from the `/backend` directory.
+To add sample data to your database (temples, users, etc.), run this command from the `/backend` directory.
 
-**Warning:** This will delete any existing data in the database.
+**Warning:** This will delete any existing data.
 
 ```bash
 cd backend
 npm run seed
 ```
 
-### Step 5: Run the Application
+### Step 4: Run the Application (Two Terminals)
 
-You need to run the backend server and the frontend development server in two separate terminals.
+You need to start both servers at the same time.
 
 -   **Terminal 1: Start the Backend Server**
     ```bash
     cd backend
     npm run dev
     ```
-    The backend API should now be running at `http://localhost:5000`.
+    You should see a message: `✅ Backend server running... on port 5000`. Keep this terminal open.
 
--   **Terminal 2: Start the Frontend**
-    The frontend is served as a static site. You can use any simple HTTP server. If you have `serve` installed:
+-   **Terminal 2: Start the Frontend Server**
+    (Make sure you are in the project's root directory)
     ```bash
-    # Run from the root directory
-    serve -l 3000
+    npm run dev
     ```
-    The website should now be accessible at `http://localhost:3000`. The frontend will automatically connect to the backend running on port 5000.
+    You should see a message: `> Local: http://127.0.0.1:3000/`.
+
+Now, open **`http://localhost:3000`** in your web browser. Your application should be working correctly.
 
 ---
 

@@ -56,6 +56,12 @@ const BookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  addOns: {
+    guideLanguage: { type: String, required: false },
+    pickupDrop: { type: Boolean, required: false },
+    poojaItems: { type: Boolean, required: false },
+    receiveNotifications: { type: Boolean, required: false },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,5 +1,3 @@
-
-
 import type { LucideProps } from 'lucide-react';
 import type React from 'react';
 
@@ -10,9 +8,7 @@ export interface User {
   role: 'user' | 'admin' | 'temple_manager';
   assignedTempleId?: number;
   mobile?: string;
-  // FIX: Add optional password field for user creation/update forms.
-  // This field is not populated for existing users fetched from the API.
-  password?: string;
+  password: string;
 }
 
 export interface Puja {
@@ -52,6 +48,7 @@ export interface Temple {
     questionKey: string;
     answerKey: string;
   }[];
+  layoutImageUrl?: string;
 }
 
 export interface QuickAction {
@@ -64,7 +61,6 @@ export interface Service {
     id: number;
     titleKey: string;
     descriptionKey: string;
-    // FIX: Changed icon type to string to match backend data model.
     icon: string;
 }
 
@@ -75,20 +71,34 @@ export interface Testimonial {
     location: string;
 }
 
+export type BookingStatus = 'Confirmed' | 'Completed' | 'Cancelled';
+
+export interface PopulatedUser {
+    _id: string;
+    name: string;
+    email: string;
+}
+
 export interface Booking {
   id: string; // transactionId
-  userId: string;
+  userId: string | PopulatedUser;
   userEmail: string;
   pujaNameKey: string;
   templeNameKey: string;
   date: string; // YYYY-MM-DD format
-  status: 'Confirmed' | 'Completed';
+  status: BookingStatus;
   price: number;
   isEPuja?: boolean;
   liveStreamLink?: string;
   numDevotees: number;
   fullName: string;
   phoneNumber: string;
+  addOns?: {
+    guideLanguage?: string;
+    pickupDrop?: boolean;
+    poojaItems?: boolean;
+    receiveNotifications?: boolean;
+  };
 }
 
 export interface PrasadSubscription {
@@ -129,4 +139,38 @@ export interface SeasonalEvent {
     description: string;
     cta: string;
     imageUrl: string;
+}
+
+export interface AppSettings {
+    helpline: string;
+    whatsapp: string;
+    email: string;
+}
+
+export interface QueueAssistancePackage {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  active: boolean;
+  order: number;
+}
+
+export interface QueueAssistanceAddOn {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  active: boolean;
+  type: 'guide' | 'pickup' | 'poojaItems';
+}
+
+
+// For PhonePe Payment
+export type PaymentDetails = Omit<Booking, 'status' | 'userId' | 'userEmail' | 'id'> | Omit<PrasadSubscription, 'userId' | 'nextDeliveryDate' | 'status' | 'id'>;
+
+export interface PaymentPayload {
+    amount: number;
+    details: PaymentDetails;
+    type: 'booking' | 'subscription';
 }

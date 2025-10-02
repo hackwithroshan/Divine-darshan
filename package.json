@@ -1,5 +1,5 @@
 {
-  "name": "divine-darshan-frontend",
+  "name": "astrologica-frontend",
   "version": "1.0.0",
   "scripts": {
     "dev": "esbuild index.tsx --bundle --outfile=index.js --servedir=. --serve=:3000",

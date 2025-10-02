@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                     {/* About Section */}
                     <div>
-                        <h3 className="text-lg font-bold text-saffron mb-4">Divine Darshan</h3>
+                        <h3 className="text-lg font-bold text-saffron mb-4">astrologica</h3>
                         <p className="text-sm">
                             {t('footer.about')}
                         </p>
@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
                 </div>
 
                 <div className="border-t border-saffron/20 pt-6 text-center text-sm text-white/60">
-                    <p>&copy; {new Date().getFullYear()} Divine Darshan. {t('footer.copyright')}</p>
+                    <p>&copy; {new Date().getFullYear()} astrologica. {t('footer.copyright')}</p>
                 </div>
             </div>
         </footer>

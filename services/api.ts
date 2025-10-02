@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Temple, Service, Testimonial, Booking, User, SeasonalEvent, PrasadSubscription } from '../types';
+import { Temple, Service, Testimonial, Booking, User, SeasonalEvent, PrasadSubscription, AppSettings, PaymentPayload, QueueAssistancePackage, QueueAssistanceAddOn } from '../types';
 
 /**
  * Intelligently parses an error object (especially from Axios) to return a user-friendly string.
@@ -71,6 +71,9 @@ export const updateSeasonalEvent = (eventData: Partial<SeasonalEvent>) => api.pu
 export const addTestimonial = (testimonialData: Partial<Testimonial>) => api.post('/content/testimonials', testimonialData);
 export const updateTestimonial = (id: number, testimonialData: Partial<Testimonial>) => api.put(`/content/testimonials/${id}`, testimonialData);
 export const deleteTestimonial = (id: number) => api.delete(`/content/testimonials/${id}`);
+export const getAppSettings = (): Promise<{ data: { data: AppSettings } }> => api.get('/content/settings');
+export const updateAppSettings = (settingsData: Partial<AppSettings>) => api.put('/content/settings', settingsData);
+
 
 // Booking API
 // Fix: Updated type to correctly reflect the booking payload. `id` (transactionId) and `userEmail` are required from the frontend, while `status` and `userId` are handled by the backend.
@@ -80,8 +83,10 @@ export const getAllBookings = (): Promise<{ data: { data: Booking[] } }> => api.
 
 // User API
 export const getUsers = (): Promise<{ data: { data: User[] } }> => api.get('/users');
-export const createUser = (userData: Partial<User>) => api.post('/users', userData);
-export const updateUser = (id: string, userData: Partial<User>) => api.put(`/users/${id}`, userData);
+// FIX: Update function signature to accept a full User object. The backend now requires a password for user creation.
+export const createUser = (userData: User) => api.post('/users', userData);
+// FIX: Update function signature to accept a full User object to align with the form data structure.
+export const updateUser = (id: string, userData: User) => api.put(`/users/${id}`, userData);
 export const deleteUser = (id: string) => api.delete(`/users/${id}`);
 
 
@@ -92,6 +97,39 @@ export const getSubscriptionsByUserId = (userId: string): Promise<{ data: { data
 
 // Payment API
 export const createRazorpayOrder = (amount: number): Promise<{ data: { order_id: string; key_id: string; } }> => api.post('/payments/create-order', { amount });
+export const verifyRazorpayPayment = (data: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string; }) => api.post('/payments/verify-payment', data);
+
+// PhonePe Payment API
+export const createPhonepeOrder = (payload: PaymentPayload): Promise<{ data: { redirectUrl: string } }> => api.post('/payments/phonepe/create-order', payload);
+export const verifyPhonepePayment = (transactionId: string): Promise<{ data: { success: boolean; message: string; data?: any } }> => api.post('/payments/phonepe/verify-payment', { transactionId });
+
+// Queue Assistance API (Live Status Placeholder)
+export const getQueueStatus = (templeId: string) => {
+    console.log(`Fetching queue status for templeId: ${templeId}`);
+    // This is a mock function. In a real application, this would be an API call.
+    return new Promise<{ data: { waitingTime: number, devoteesInQueue: number, lastUpdated: string }}>((resolve) => {
+        setTimeout(() => {
+            resolve({
+                data: {
+                    waitingTime: Math.floor(Math.random() * (75 - 30 + 1)) + 30, // Random time between 30 and 75 mins
+                    devoteesInQueue: Math.floor(Math.random() * (300 - 50 + 1)) + 50,
+                    lastUpdated: new Date().toISOString(),
+                }
+            });
+        }, 500); // Simulate network delay
+    });
+};
+
+// Queue Assistance Management API
+export const getQueuePackages = (): Promise<{ data: { data: QueueAssistancePackage[] } }> => api.get('/queue-assistance/packages');
+export const addQueuePackage = (data: Partial<QueueAssistancePackage>) => api.post('/queue-assistance/packages', data);
+export const updateQueuePackage = (id: string, data: Partial<QueueAssistancePackage>) => api.put(`/queue-assistance/packages/${id}`, data);
+export const deleteQueuePackage = (id: string) => api.delete(`/queue-assistance/packages/${id}`);
+
+export const getQueueAddOns = (): Promise<{ data: { data: QueueAssistanceAddOn[] } }> => api.get('/queue-assistance/addons');
+export const addQueueAddOn = (data: Partial<QueueAssistanceAddOn>) => api.post('/queue-assistance/addons', data);
+export const updateQueueAddOn = (id: string, data: Partial<QueueAssistanceAddOn>) => api.put(`/queue-assistance/addons/${id}`, data);
+export const deleteQueueAddOn = (id: string) => api.delete(`/queue-assistance/addons/${id}`);
 
 
 export default api;

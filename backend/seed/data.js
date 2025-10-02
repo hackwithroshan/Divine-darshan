@@ -1,4 +1,3 @@
-
 const newImageUrl = 'https://th.bing.com/th/id/R.7a597d5c26d6c80c9a1770de2935dde6?rik=elpdFrOmUN3pRw&riu=http%3a%2f%2fwww.thehistoryhub.com%2fwp-content%2fuploads%2f2017%2f03%2fKashi-Vishwanath-Temple.jpg&ehk=uLF1dzVIUhTZ7QxBw5uhz06SVzeEBNCdQf1puUHIe3E%3d&risl=&pid=ImgRaw&r=0';
 
 exports.temples = [
@@ -11,6 +10,7 @@ exports.temples = [
         imageUrl: newImageUrl,
         descriptionKey: 'data.temples.vaishnoDevi.description',
         gallery: [ newImageUrl, newImageUrl, newImageUrl ],
+        layoutImageUrl: 'https://www.maavaishnodevi.org/images/track_map.jpg',
         pujas: [
             { id: 1, nameKey: 'data.pujas.attaDarshan.name', descriptionKey: 'data.pujas.attaDarshan.description', price: 2100 },
             { id: 2, nameKey: 'data.pujas.individualPooja.name', descriptionKey: 'data.pujas.individualPooja.description', price: 5100 },
@@ -31,6 +31,7 @@ exports.temples = [
         imageUrl: newImageUrl,
         descriptionKey: 'data.temples.tirupati.description',
         gallery: [ newImageUrl, newImageUrl, newImageUrl ],
+        layoutImageUrl: 'https://www.tirumala.org/NewImages/TTD_MAP-Tirumala.jpg',
         pujas: [
             { id: 1, nameKey: 'data.pujas.kalyanotsavam.name', descriptionKey: 'data.pujas.kalyanotsavam.description', price: 1000 },
             { id: 2, nameKey: 'data.pujas.specialEntryDarshan.name', descriptionKey: 'data.pujas.specialEntryDarshan.description', price: 300 },
@@ -101,3 +102,24 @@ exports.seasonalEvent = {
         imageUrl: newImageUrl
     }
 };
+
+exports.appSettings = {
+    key: 'appSettings',
+    data: {
+        helpline: '+91 99999 88888',
+        whatsapp: '+91 99999 88888',
+        email: 'contact@divinedarshan.com'
+    }
+};
+
+exports.queueAssistancePackages = [
+    { name: 'Normal Queue Assistance', description: 'Our assistant will stand in the general queue for you.', price: 501, active: true, order: 1 },
+    { name: 'Senior Citizen / Special Assistance', description: 'Includes wheelchair support and priority arrangements where available.', price: 751, active: true, order: 2 },
+    { name: 'VIP Darshan Facilitation', description: 'We arrange for express/VIP entry passes for the quickest darshan.', price: 1501, active: true, order: 3 },
+];
+
+exports.queueAssistanceAddOns = [
+    { name: 'Local Guide Service', description: 'An experienced guide for your temple visit.', price: 800, active: true, type: 'guide' },
+    { name: 'Pickup & Drop Service', description: 'Hassle-free transport from your hotel/location.', price: 1200, active: true, type: 'pickup' },
+    { name: 'Pooja Items Kit', description: 'Includes flowers, prasad, and other essentials.', price: 300, active: true, type: 'poojaItems' },
+];

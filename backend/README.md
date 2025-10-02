@@ -1,7 +1,6 @@
+# astrologica - Backend Server
 
-# Divine Darshan - Backend Server
-
-This is the backend server for the Divine Darshan application. It is built with Node.js, Express, and MongoDB, and it provides a RESTful API for all frontend operations, including user authentication, temple management, bookings, and content management.
+This is the backend server for the astrologica application. It is built with Node.js, Express, and MongoDB, and it provides a RESTful API for all frontend operations, including user authentication, temple management, bookings, and content management.
 
 ## Features
 
@@ -30,44 +29,48 @@ This is the backend server for the Divine Darshan application. It is built with 
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v16 or later recommended)
-- [MongoDB](https://www.mongodb.com/try/download/community) (either a local instance or a cloud-hosted version like MongoDB Atlas)
+- [MongoDB](https://www.mongodb.com/try/download/community) (a local instance or a cloud service like MongoDB Atlas)
 
 ### 1. Install Dependencies
 
-Navigate to the backend directory and install the required npm packages.
+Navigate to this directory and install the required packages.
 
 ```bash
-cd backend
+# This assumes you are inside the /backend directory
 npm install
 ```
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file in the `backend` directory. You can do this by copying the `.env.example` if it exists, or creating a new file.
+The backend server requires secret keys and configuration settings to run. These are stored in a `.env` file which you must create.
 
-Now, open the `.env` file and add your configuration details. **All variables are mandatory.**
+A template file named `.env.example` is provided to make this easy.
 
-```env
-# The port your server will run on
-PORT=5000
+**Step 1: Create your `.env` file**
 
-# Your MongoDB connection string (from local instance or MongoDB Atlas)
-# Example for local MongoDB: MONGO_URI=mongodb://127.0.0.1:27017/divine_darshan
-MONGO_URI=mongodb://127.0.0.1:27017/divine_darshan
+In your terminal, make sure you are in the `/backend` directory. Then, run the following command to copy the template:
 
-# A long, random, and secret string for signing JWTs. This is CRITICAL for security.
-# Use a password generator to create a strong secret.
-JWT_SECRET=your_super_secret_and_random_string_here
+```bash
+# For Windows (in PowerShell) or Mac/Linux:
+cp .env.example .env
 
-# Your Razorpay API keys. Get these from your Razorpay Dashboard.
-# NEVER commit these to a public repository.
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+# If you use the old Windows Command Prompt:
+copy .env.example .env
 ```
 
-### 3. Seed the Database (Initial Setup)
+This will create a new file named `.env` in the `backend` folder.
 
-To populate the database with initial temple, service, and user data, run the seeder script. **This will delete all existing data in the collections.**
+**Step 2: Edit the `.env` file**
+
+Open the new `.env` file in your code editor and fill in your actual values.
+
+**You must replace the placeholder values** (like `your_super_secret...`, `your_razorpay_key...`) with your actual secret keys.
+
+**All variables listed in this file are required for the server to start.**
+
+### 3. Seed the Database (For Initial Setup)
+
+To populate the database with initial sample data, run the seeder script. **Warning: This will delete all existing data in the collections.**
 
 ```bash
 npm run seed
@@ -76,16 +79,32 @@ npm run seed
 ---
 ## Running the Server
 
-- **Development Mode:** To run the server with Nodemon (which automatically restarts on file changes):
-  ```bash
-  npm run dev
-  ```
-- **Production Mode:** To run the standard server:
-  ```bash
-  npm start
-  ```
+To run the server in development mode (which automatically restarts on file changes):
+```bash
+npm run dev
+```
 
-The API will be available at `http://localhost:5000/api`.
+The server will start on port 5000 and is now ready to receive requests from the frontend application.
+
+---
+## Troubleshooting
+
+### Razorpay Payment Error: "Uh! oh! Something went wrong"
+
+This error on the Razorpay checkout page almost always means there is a problem with the merchant's configuration (your backend setup). The most common causes are:
+
+1.  **Incorrect API Keys:** The `RAZORPAY_KEY_ID` or `RAZORPAY_KEY_SECRET` in your `.env` file are wrong, or you are mixing test keys with live mode. Double-check that you have copied the correct **Live Keys** from your Razorpay dashboard into the `.env` file.
+2.  **Server Not Running:** Ensure your backend server is running (`npm run dev`) and has successfully connected to the database without any startup errors.
+3.  **Account Not Live:** Your Razorpay account may not be fully activated for live payments. Please check your account status on the Razorpay dashboard.
+
+To use the keys you have, your `.env` file should look like this:
+
+```env
+# ... other variables
+# Example using your live keys:
+RAZORPAY_KEY_ID=rzp_live_RNPcIWCuyzmN11
+RAZORPAY_KEY_SECRET=DSxVqzdy712qbchv18ZDSW8F
+```
 
 ---
 ## API Endpoints
@@ -112,6 +131,8 @@ The API will be available at `http://localhost:5000/api`.
 
 ### Payments (`/api/payments`)
 - `POST /create-order`: Creates a Razorpay order on the server. (Protected)
+- `POST /phonepe/create-order`: Creates a PhonePe payment request. (Protected)
+- `POST /phonepe/verify-payment`: Verifies a PhonePe payment and creates the corresponding booking/subscription. (Protected)
 
 ### Services (`/api/services`)
 

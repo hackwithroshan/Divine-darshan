@@ -17,13 +17,14 @@ import PrasadSubscriptionPage from './components/PrasadSubscriptionPage';
 import QueueAssistancePage from './components/QueueAssistancePage';
 import TempleToursPage from './components/TempleToursPage';
 import SpecialSevaPage from './components/SpecialSevaPage';
+import PaymentStatus from './components/PaymentStatus';
 import { Temple, User } from './types';
 import { AuthProvider, AuthContext } from './contexts/AuthContext';
 import { LanguageProvider, LanguageContext } from './contexts/LanguageContext';
 import { ToastProvider } from './contexts/ToastContext';
 import ToastContainer from './components/ToastContainer';
 
-type View = 'home' | 'temple' | 'user_dashboard' | 'admin_dashboard' | 'temple_list' | 'prasad_list' | 'queue_assistance' | 'temple_tours' | 'special_seva';
+type View = 'home' | 'temple' | 'user_dashboard' | 'admin_dashboard' | 'temple_list' | 'prasad_list' | 'queue_assistance' | 'temple_tours' | 'special_seva' | 'payment_status';
 type TempleListMode = 'all' | 'epuja';
 
 
@@ -35,6 +36,17 @@ const AppContent: React.FC = () => {
     
     const { language } = useContext(LanguageContext);
     const { isAuthenticated, user, logout } = useContext(AuthContext);
+
+    useEffect(() => {
+        // Simple router logic for payment status callback
+        const path = window.location.pathname;
+        const hash = window.location.hash; // e.g., #/payment/status?id=...
+
+        // Handle both direct path access (for production with rewrites) and hash-based routing (for local dev)
+        if (path.startsWith('/payment/status') || hash.startsWith('#/payment/status')) {
+            setView('payment_status');
+        }
+    }, []);
 
     useEffect(() => {
         document.documentElement.lang = language;
@@ -70,6 +82,10 @@ const AppContent: React.FC = () => {
 
     const handleBackToHome = () => {
         setSelectedTemple(null);
+        // Clear path for SPA behavior
+        if (window.location.pathname !== '/' || window.location.hash !== '') {
+             window.history.pushState({}, '', '/');
+        }
         setView('home');
         window.scrollTo(0, 0);
     };
@@ -103,10 +119,13 @@ const AppContent: React.FC = () => {
     }
     
     const navigateToView = (targetView: View) => {
-         if (!isAuthenticated) {
+        const publicViews: View[] = ['prasad_list', 'queue_assistance', 'temple_tours', 'special_seva'];
+        // If the view is NOT public AND the user is NOT authenticated, show login modal.
+        if (!publicViews.includes(targetView) && !isAuthenticated) {
             setLoginModalOpen(true);
             return;
         }
+        // Otherwise, just navigate.
         setView(targetView);
         window.scrollTo(0, 0);
     }
@@ -137,11 +156,13 @@ const AppContent: React.FC = () => {
             case 'prasad_list':
                 return <PrasadSubscriptionPage onBack={handleBackToHome} onNavigateToDashboard={handleNavigateToDashboard} />;
             case 'queue_assistance':
-                return <QueueAssistancePage onBack={handleBackToHome} />;
+                return <QueueAssistancePage onBack={handleBackToHome} onLoginRequired={handleNavigateToDashboard} />;
             case 'temple_tours':
                 return <TempleToursPage onBack={handleBackToHome} />;
             case 'special_seva':
                 return <SpecialSevaPage onBack={handleBackToHome} />;
+            case 'payment_status':
+                return <PaymentStatus onNavigateToDashboard={handleNavigateToDashboard} onBackToHome={handleBackToHome} />;
             case 'home':
             default:
                 return (

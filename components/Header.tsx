@@ -21,17 +21,16 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const { language, setLanguage, t } = useContext(LanguageContext);
     const { isAuthenticated, logout } = useContext(AuthContext);
-    const [selectedLanguage, setSelectedLanguage] = useState(languages.find(l => l.code === language) || languages[0]);
     const langDropdownRef = useRef<HTMLDivElement>(null);
 
-    // Sync selected language display when context language changes
-    useEffect(() => {
-        setSelectedLanguage(languages.find(l => l.code === language) || languages[0]);
-    }, [language]);
+    // DERIVED STATE: The selected language is derived directly from context,
+    // removing the need for extra state and effects to keep them in sync.
+    const selectedLanguage = languages.find(l => l.code === language) || languages[0];
 
     // Close dropdown on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            // This checks both desktop and mobile dropdowns
             if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
                 setLangDropdownOpen(false);
             }
@@ -55,9 +54,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
         };
     }, [isMobileMenuOpen]);
 
-    const handleLanguageSelect = (language: typeof languages[0]) => {
-        setSelectedLanguage(language);
-        setLanguage(language.code);
+    const handleLanguageSelect = (languageCode: string) => {
+        setLanguage(languageCode);
         setLangDropdownOpen(false); // Close dropdown on selection
     };
 
@@ -71,13 +69,10 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
                         e.preventDefault();
                         onNavigateHome();
                     }}
-                    className="flex items-center space-x-2" 
+                    className="flex items-center space-x-3" 
                     aria-label="Go to homepage"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-saffron" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l4-5 4 5h-3v4h-2z" />
-                    </svg>
-                    <span className="text-xl md:text-2xl font-bold tracking-wider">Divine Darshan</span>
+                    <img src="/public/image/logo white final.png " alt="astrologica logo" className="h-12" />
                 </a>
 
                 {/* Desktop Menu */}
@@ -109,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
                                         href="#"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            handleLanguageSelect(lang);
+                                            handleLanguageSelect(lang.code);
                                         }}
                                         className={`block px-4 py-2 text-sm transition-colors ${
                                             lang.code === language 
@@ -181,23 +176,30 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
                             <Phone size={20} />
                             <span>{t('header.helpline')}</span>
                         </a>
-                        <div className="relative">
+                        <div className="relative" ref={langDropdownRef}>
                             <button
                                 onClick={() => setLangDropdownOpen(!isLangDropdownOpen)}
                                 className="flex items-center space-x-1 cursor-pointer hover:text-saffron transition-colors focus:outline-none"
+                                aria-haspopup="true"
+                                aria-expanded={isLangDropdownOpen}
                             >
                                 <Globe size={20} />
                                 <span>{selectedLanguage.name}</span>
                                 <ChevronDown size={16} className={`transition-transform ${isLangDropdownOpen ? 'rotate-180' : ''}`} />
                             </button>
                             {isLangDropdownOpen && (
-                                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 animate-fade-in-up">
+                                <div className="absolute left-1/2 -translate-x-1/2 mt-4 w-56 bg-white rounded-lg shadow-2xl py-2 z-50 animate-fade-in-up border border-saffron/20" style={{ animationDuration: '0.15s' }}>
                                     {languages.map(lang => (
                                         <a
                                             key={lang.code}
                                             href="#"
-                                            onClick={(e) => { e.preventDefault(); handleLanguageSelect(lang); }}
-                                            className={`block px-4 py-2 text-sm ${lang.code === language ? 'bg-saffron text-maroon font-bold' : 'text-gray-700 hover:bg-orange-100'}`}
+                                            onClick={(e) => { e.preventDefault(); handleLanguageSelect(lang.code); }}
+                                            className={`block w-full text-left px-4 py-3 text-base transition-colors ${
+                                                lang.code === language 
+                                                ? 'bg-saffron text-maroon font-bold' 
+                                                : 'text-gray-700 hover:bg-orange-100'
+                                            }`}
+                                            aria-current={lang.code === language ? 'true' : 'false'}
                                         >
                                             {lang.name}
                                         </a>

@@ -207,6 +207,9 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // This effect runs when the component mounts. Since the component re-mounts
+        // each time the user navigates to the dashboard, this ensures the
+        // latest bookings and subscriptions are always fetched.
         if (user) {
             const fetchData = async () => {
                 try {
@@ -225,7 +228,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ onLogout }) => {
             };
             fetchData();
         }
-    }, [user]);
+    }, []);
 
     const today = new Date().toISOString().split('T')[0];
     const upcomingBookings = bookings.filter(b => b.date >= today).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());

@@ -6,6 +6,8 @@ const {
   deleteTestimonial,
   getSeasonalEvent,
   updateSeasonalEvent,
+  getAppSettings,
+  updateAppSettings,
 } = require('../controllers/contentController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -25,5 +27,10 @@ router
     .route('/seasonalevent')
     .get(getSeasonalEvent)
     .put(protect, authorize('admin'), updateSeasonalEvent);
+
+router
+    .route('/settings')
+    .get(getAppSettings)
+    .put(protect, authorize('admin'), updateAppSettings);
 
 module.exports = router;

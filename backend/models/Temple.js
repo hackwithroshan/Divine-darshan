@@ -40,6 +40,7 @@ const TempleSchema = new mongoose.Schema({
   benefitsKey: [String],
   reviewIds: [Number],
   faq: [FaqSchema],
+  layoutImageUrl: String,
 });
 
 module.exports = mongoose.model('Temple', TempleSchema);
