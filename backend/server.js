@@ -41,8 +41,15 @@ const app = express();
 // Body parser
 app.use(express.json());
 
-// Enable CORS
-app.use(cors());
+// --- START OF FIX: Explicit CORS Configuration ---
+// Enable CORS with specific options to allow requests from the frontend.
+// The frontend URL is specified in the .env file (for local) or Vercel env vars (for production).
+const corsOptions = {
+    origin: process.env.FRONTEND_URL,
+    optionsSuccessStatus: 200 // For legacy browser support
+};
+app.use(cors(corsOptions));
+// --- END OF FIX ---
 
 // Mount routers
 app.use('/api/auth', authRoutes);
