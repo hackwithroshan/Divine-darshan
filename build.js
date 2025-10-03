@@ -36,11 +36,18 @@ async function build() {
   
   fs.writeFileSync(destHtmlPath, html);
 
-  // Copy public directory if it exists, to prevent build errors and handle static assets.
+  // Copy public directory if it exists, otherwise create an empty one in dist.
   const publicDir = 'public';
+  const destPublicDir = path.join(distDir, 'public');
   if (fs.existsSync(publicDir)) {
       // copySync copies the contents of publicDir into the destination
-      fs.copySync(publicDir, path.join(distDir, 'public'));
+      fs.copySync(publicDir, destPublicDir);
+  } else {
+      // If the source 'public' directory doesn't exist, create an empty one in the 'dist'
+      // directory. This prevents the build from failing and avoids 404 errors for assets,
+      // although the assets themselves will be missing until added to the source.
+      fs.ensureDirSync(destPublicDir);
+      console.log("Warning: 'public' directory not found. An empty 'public' directory was created in 'dist'.");
   }
 
   console.log('Frontend build successful. Output in /dist directory.');
