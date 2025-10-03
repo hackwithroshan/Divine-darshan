@@ -92,7 +92,7 @@ const Sidebar: React.FC<{ currentView: AdminView, setView: (view: AdminView) => 
     return (
         <aside className={`fixed top-0 left-0 h-full bg-maroon text-white w-64 flex flex-col transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <div className="flex items-center justify-center h-20 border-b border-saffron/20 px-4">
-                <img src="/public/image/logo white final.png " alt="astrologica logo" className="h-10" />
+                <img src="/public/image/logo white final.png" alt="astrologica logo" className="h-10" />
             </div>
             <nav className="flex-1 py-4">
                 <ul>

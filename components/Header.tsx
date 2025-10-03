@@ -72,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigateToDashboard, onNavigateHome }
                     className="flex items-center space-x-3" 
                     aria-label="Go to homepage"
                 >
-                    <img src="/public/image/logo white final.png " alt="astrologica logo" className="h-12" />
+                    <img src="/public/image/logo white final.png" alt="astrologica logo" className="h-12" />
                 </a>
 
                 {/* Desktop Menu */}

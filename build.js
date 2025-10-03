@@ -15,7 +15,7 @@ async function build() {
     outfile: path.join(distDir, 'bundle.js'),
     minify: true,
     sourcemap: true,
-    target: ['es2020'], // Changed to a more modern target
+    target: ['es2020'],
     define: { 'process.env.NODE_ENV': '"production"' }
   });
 
@@ -36,8 +36,12 @@ async function build() {
   
   fs.writeFileSync(destHtmlPath, html);
 
-  // Copy other static assets if any
-  fs.copySync('public', distDir);
+  // Copy public directory if it exists, to prevent build errors and handle static assets.
+  const publicDir = 'public';
+  if (fs.existsSync(publicDir)) {
+      // copySync copies the contents of publicDir into the destination
+      fs.copySync(publicDir, path.join(distDir, 'public'));
+  }
 
   console.log('Frontend build successful. Output in /dist directory.');
 }
