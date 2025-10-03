@@ -2,10 +2,9 @@
   "name": "astrologica-frontend",
   "version": "1.0.0",
   "scripts": {
-    "postinstall": "npm install --prefix backend",
-    "dev": "npx concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm:dev:frontend\" \"npm:dev:backend\"",
-    "dev:frontend": "node dev.js",
-    "dev:backend": "npm run dev:start --prefix backend",
+    "start": "npx concurrently --kill-others-on-fail --names \"FRONTEND,BACKEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm:dev\" \"npm:dev:backend\"",
+    "dev": "esbuild index.tsx --bundle --outfile=index.js --servedir=. --serve=:3000",
+    "dev:backend": "npm run dev --prefix backend",
     "build": "node build.js",
     "vercel-build": "npm run build"
   },
